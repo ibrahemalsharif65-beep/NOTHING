@@ -297,7 +297,7 @@
 
     btnEl.addEventListener('click', async (e) => {
       spawnRipple(e);
-      const bump = 1 + Math.floor(Math.random() * 3);
+      const bump = 1;
       const newVal = await increment(bump);
       if (newVal !== null) setCounter(newVal, true);
 
