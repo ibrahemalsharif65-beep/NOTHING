@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Busy Doing Nothing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet" />
@@ -13,7 +13,6 @@
       --bg: #f5f4f0;
       --text: #1a1a18;
       --muted: #666660;
-      --faint: #999990;
       --dot: #4a4a44;
     }
 
@@ -22,16 +21,17 @@
         --bg: #111110;
         --text: #e8e7e0;
         --muted: #888882;
-        --faint: #555550;
         --dot: #888880;
       }
     }
 
     html, body {
-      height: 100%;
+      margin: 0;
+      padding: 0;
       background: var(--bg);
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
+      overflow: hidden;
     }
 
     body {
@@ -39,11 +39,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      height: 100dvh;
-      max-height: 100dvh;
-      overflow: hidden;
-      position: relative;
-      padding: clamp(1.5rem, 5vh, 3rem) 1.5rem;
+      padding: env(safe-area-inset-top, 1.5rem) 1.5rem env(safe-area-inset-bottom, 1.5rem);
+      /* JS will set exact height */
     }
 
     .orb {
@@ -65,11 +62,7 @@
       100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.6; }
     }
 
-    /* spacer top to balance made-by at bottom */
-    .spacer-top {
-      height: 1rem;
-      flex-shrink: 0;
-    }
+    .spacer-top { flex-shrink: 0; height: 0.5rem; }
 
     .container {
       position: relative;
@@ -78,11 +71,12 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: clamp(1.5rem, 4vh, 2.5rem);
+      gap: clamp(1.2rem, 4vh, 2.5rem);
       text-align: center;
       width: 100%;
       max-width: 480px;
       flex: 1;
+      min-height: 0;
     }
 
     .busy-title {
@@ -90,13 +84,11 @@
       flex-direction: column;
       align-items: center;
       line-height: 1;
-      gap: 0;
       user-select: none;
     }
 
     .busy-title span {
-      font-family: 'DM Sans', sans-serif;
-      font-size: clamp(28px, 9vw, 64px);
+      font-size: clamp(26px, 9vw, 64px);
       font-weight: 200;
       letter-spacing: 0.25em;
       color: var(--text);
@@ -107,7 +99,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: clamp(0.4rem, 1.5vh, 0.8rem);
+      gap: clamp(0.3rem, 1vh, 0.7rem);
     }
 
     .counter-label {
@@ -165,7 +157,6 @@
       transition: opacity 0.35s ease, transform 0.35s ease;
       pointer-events: none;
       white-space: nowrap;
-      text-align: center;
       height: 0;
       overflow: visible;
       transform: translateY(4px);
@@ -180,7 +171,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: clamp(0.5rem, 1.5vh, 1rem);
+      gap: clamp(0.4rem, 1.5vh, 1rem);
     }
 
     .personal-counter {
@@ -236,8 +227,6 @@
     }
 
     .made-by {
-      position: relative;
-      z-index: 10;
       font-family: 'DM Mono', monospace;
       font-size: clamp(9px, 2vw, 10px);
       color: var(--muted);
@@ -245,6 +234,7 @@
       text-transform: uppercase;
       user-select: none;
       flex-shrink: 0;
+      padding-bottom: 0.25rem;
     }
 
     .ripple {
@@ -280,7 +270,6 @@
 <body>
 
   <div class="orb"></div>
-
   <div class="spacer-top"></div>
 
   <div class="container">
@@ -309,6 +298,15 @@
   </div>
 
   <div class="made-by">made by ibrahim alsharif</div>
+
+  <script>
+    // Fix height for Chrome Android - uses window.innerHeight which excludes browser UI
+    function setHeight() {
+      document.body.style.height = window.innerHeight + 'px';
+    }
+    setHeight();
+    window.addEventListener('resize', setHeight);
+  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
@@ -371,7 +369,6 @@
       "rest in peace, productivity",
       "you're built different",
       "doing nothing at scale",
-      "this is the future liberals want",
       "NASA is watching",
       "you just broke a world record",
       "your ancestors are confused",
@@ -383,13 +380,10 @@
       "you're so good at this it's scary",
       "hustle culture is shaking",
       "your focus is unmatched",
-      "the matrix can't handle you",
       "main character behavior",
       "you're literally the goat",
       "top 0.1% of nothing-doers",
-      "this slaps so hard",
       "your nothing is immaculate",
-      "bro really said nothing and meant it",
       "no thoughts, head empty, winning",
       "doing less has never looked so good",
       "the economy fears you",
@@ -411,29 +405,23 @@
       "scientists can't explain you",
       "you're built for this era",
       "doing nothing harder than anyone",
-      "your contribution: zero. your impact: immense.",
       "the monks are jealous",
       "you achieved nothing and everything",
       "this is performance art",
-      "your potential: infinite. your effort: none.",
       "a beacon of stillness",
       "you're an icon and you know it",
       "the nothingness radiates off you",
       "you're basically enlightened",
-      "history books, probably",
       "your brain said 'not today'",
       "zero tasks completed. zero regrets.",
       "you made doing nothing look hard",
       "your rest is someone else's anxiety",
-      "this economy can't touch you",
       "you're the rest we all need",
       "doing nothing with intention. rare.",
       "you and the void are besties",
-      "the audacity to exist and do nothing",
       "you just out-chilled everyone",
       "a true pioneer of the nothing space",
       "this is giving... enlightenment",
-      "your idle is someone's dream day",
       "not lazy. just strategic.",
       "you make nothing look effortless",
       "congratulations, you exist",
@@ -442,12 +430,10 @@
       "you're a vibe and a half",
       "zero effort. maximum impact.",
       "you're the reason rest exists",
-      "this moment brought to you by nothing",
       "your energy today: nonexistent. iconic.",
       "the world wasn't ready for this level",
       "you just invented a new sport",
       "nothing to declare. everything to admire.",
-      "your nothing is everyone else's something",
       "you're giving the people what they need",
       "sheer brilliance dressed as laziness",
       "the dedication to doing nothing is inspiring",
@@ -457,9 +443,7 @@
       "you just reset the standard for existing",
       "this is what peak civilization looks like",
       "you're the final boss of chilling",
-      "history will call this the great nothing",
       "somewhere, a life coach just cried",
-      "you're doing something profound here",
       "the revolution will not be productive",
       "you're on your villain era. do nothing.",
       "your silence is louder than their hustle",
@@ -467,6 +451,17 @@
       "you unlocked the secret level: rest",
       "doing nothing is an extreme sport now",
       "your nothing is a cultural reset",
+      "your contribution: zero. your impact: immense.",
+      "history books, probably",
+      "you're so unbothered it should be illegal",
+      "a masterclass in existing",
+      "you're winning and nobody even knows",
+      "this level of nothing is aspirational",
+      "you're the blueprint",
+      "the universe approves",
+      "even the algorithm is confused",
+      "you just found the cheat code",
+      "your idle state is peak performance",
     ];
 
     let quotePool = [];
