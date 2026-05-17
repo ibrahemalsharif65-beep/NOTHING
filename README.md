@@ -1,1 +1,316 @@
-# NOTHING
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nothing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:wght@200;300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f4f0;
+      --text: #1a1a18;
+      --muted: #888880;
+      --faint: #c8c7c0;
+      --dot: #4a4a44;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111110;
+        --text: #e8e7e0;
+        --muted: #666660;
+        --faint: #333330;
+        --dot: #888880;
+      }
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Breathing background orb */
+    .orb {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, color-mix(in srgb, var(--dot) 6%, transparent), transparent 70%);
+      pointer-events: none;
+      animation: drift 20s ease-in-out infinite;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes drift {
+      0%   { transform: translate(-50%, -50%) scale(1);    opacity: 0.6; }
+      33%  { transform: translate(-45%, -55%) scale(1.08); opacity: 0.9; }
+      66%  { transform: translate(-55%, -45%) scale(0.95); opacity: 0.5; }
+      100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.6; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3rem;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .counter-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .counter-label {
+      font-size: 14px;
+      font-weight: 200;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .counter-number {
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(48px, 10vw, 88px);
+      font-weight: 300;
+      color: var(--text);
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      line-height: 1;
+    }
+
+    .counter-number.updating {
+      opacity: 0.15;
+      transform: translateY(-4px);
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--faint);
+      text-transform: uppercase;
+    }
+
+    .live-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #6bcb77;
+      animation: livepulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes livepulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    .btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      background: transparent;
+      border: 0.5px solid var(--faint);
+      border-radius: 100px;
+      padding: 14px 40px;
+      cursor: pointer;
+      transition: all 0.5s ease;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:hover {
+      color: var(--text);
+      border-color: var(--muted);
+      transform: scale(1.03);
+    }
+
+    .btn:active { transform: scale(0.96); }
+
+    .btn.doing {
+      color: var(--faint);
+      border-color: var(--faint);
+      letter-spacing: 0.06em;
+    }
+
+    .pulse-bottom {
+      position: absolute;
+      bottom: 2.5rem;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--faint);
+      animation: bottomdot 4s ease-in-out infinite;
+    }
+
+    @keyframes bottomdot {
+      0%, 100% { opacity: 0; transform: scale(0.7); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    /* Ripple on click */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      border: 0.5px solid var(--faint);
+      pointer-events: none;
+      animation: rippleOut 1.2s ease-out forwards;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes rippleOut {
+      from { width: 0; height: 0; opacity: 0.6; }
+      to   { width: 300px; height: 300px; opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb"></div>
+
+  <div class="container">
+    <span class="eyebrow">nothing</span>
+
+    <div class="counter-block">
+      <span class="counter-label">Nothing is happening:</span>
+      <span class="counter-number" id="counter">—</span>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <span>live</span>
+      </div>
+    </div>
+
+    <button class="btn" id="btn">Do Nothing</button>
+  </div>
+
+  <div class="pulse-bottom"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    // ── CONFIG ── Replace these with your Supabase project values ──
+    const SUPABASE_URL = 'https://zqldmfhqlewjdvunggna.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_MJ63FO0mqP6vpqYL5Y4xNw_htggbvUn';
+    // ────────────────────────────────────────────────────────────────
+
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const counterEl = document.getElementById('counter');
+    const btnEl     = document.getElementById('btn');
+    let current     = null;
+    let btnTO       = null;
+
+    function fmt(n) {
+      return Math.round(n).toLocaleString('en-US');
+    }
+
+    function setCounter(n, animate = true) {
+      if (animate) {
+        counterEl.classList.add('updating');
+        setTimeout(() => {
+          counterEl.textContent = fmt(n);
+          counterEl.classList.remove('updating');
+        }, 260);
+      } else {
+        counterEl.textContent = fmt(n);
+      }
+      current = n;
+    }
+
+    function spawnRipple(e) {
+      const r = document.createElement('div');
+      r.className = 'ripple';
+      r.style.left = (e.clientX) + 'px';
+      r.style.top  = (e.clientY) + 'px';
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 1300);
+    }
+
+    async function fetchCount() {
+      const { data } = await db
+        .from('counter')
+        .select('value')
+        .eq('id', 1)
+        .single();
+      return data ? data.value : null;
+    }
+
+    async function increment(delta) {
+      const { data } = await db.rpc('increment_counter', { delta });
+      return data;
+    }
+
+    async function init() {
+      const val = await fetchCount();
+      if (val !== null) setCounter(val, false);
+
+      // Real-time subscription
+      db.channel('counter-changes')
+        .on('postgres_changes', {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'counter',
+          filter: 'id=eq.1'
+        }, (payload) => {
+          const newVal = payload.new.value;
+          if (newVal !== current) setCounter(newVal, true);
+        })
+        .subscribe();
+    }
+
+    btnEl.addEventListener('click', async (e) => {
+      spawnRipple(e);
+      const bump = 1 + Math.floor(Math.random() * 3);
+      const newVal = await increment(bump);
+      if (newVal !== null) setCounter(newVal, true);
+
+      btnEl.textContent = 'You are doing nothing';
+      btnEl.classList.add('doing');
+      if (btnTO) clearTimeout(btnTO);
+      btnTO = setTimeout(() => {
+        btnEl.textContent = 'Do Nothing';
+        btnEl.classList.remove('doing');
+      }, 2800);
+    });
+
+    init();
+  </script>
+</body>
+</html>
