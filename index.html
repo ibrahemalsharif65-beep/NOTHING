@@ -4,17 +4,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nothing</title>
+  <title>Busy Doing Nothing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:wght@200;300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg: #f5f4f0;
       --text: #1a1a18;
-      --muted: #888880;
-      --faint: #c8c7c0;
+      --muted: #666660;
+      --faint: #999990;
       --dot: #4a4a44;
     }
 
@@ -22,8 +22,8 @@
       :root {
         --bg: #111110;
         --text: #e8e7e0;
-        --muted: #666660;
-        --faint: #333330;
+        --muted: #888882;
+        --faint: #555550;
         --dot: #888880;
       }
     }
@@ -33,6 +33,26 @@
       background: var(--bg);
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
+      cursor: none;
+    }
+
+    #cursor {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+      mix-blend-mode: difference;
+    }
+
+    #cursor.expand {
+      width: 36px;
+      height: 36px;
+      opacity: 0.4;
     }
 
     body {
@@ -53,8 +73,7 @@
       background: radial-gradient(circle, color-mix(in srgb, var(--dot) 6%, transparent), transparent 70%);
       pointer-events: none;
       animation: drift 20s ease-in-out infinite;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
     }
 
@@ -71,7 +90,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3rem;
+      gap: 2rem;
       text-align: center;
       padding: 2rem;
     }
@@ -103,7 +122,7 @@
 
     .counter-label {
       font-size: 14px;
-      font-weight: 200;
+      font-weight: 300;
       color: var(--muted);
       letter-spacing: 0.04em;
     }
@@ -131,13 +150,12 @@
       font-family: 'DM Mono', monospace;
       font-size: 10px;
       letter-spacing: 0.14em;
-      color: var(--faint);
+      color: var(--muted);
       text-transform: uppercase;
     }
 
     .live-dot {
-      width: 5px;
-      height: 5px;
+      width: 5px; height: 5px;
       border-radius: 50%;
       background: #6bcb77;
       animation: livepulse 2.5s ease-in-out infinite;
@@ -148,6 +166,56 @@
       50% { opacity: 0.2; }
     }
 
+    /* quote takes no layout space */
+    #quote-toast {
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(12px, 2vw, 14px);
+      color: var(--text);
+      letter-spacing: 0.06em;
+      opacity: 0;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      height: 0;
+      overflow: visible;
+      transform: translateY(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #quote-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* bottom group: you: X times + stop + button, tight */
+    .bottom-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .personal-counter {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    #stop-msg {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      height: 14px;
+    }
+
+    #stop-msg.show { opacity: 1; }
+
     .btn {
       font-family: 'DM Sans', sans-serif;
       font-size: 13px;
@@ -155,10 +223,10 @@
       letter-spacing: 0.1em;
       color: var(--muted);
       background: transparent;
-      border: 0.5px solid var(--faint);
+      border: 0.5px solid var(--muted);
       border-radius: 100px;
       padding: 14px 40px;
-      cursor: pointer;
+      cursor: none;
       transition: all 0.5s ease;
       outline: none;
       -webkit-tap-highlight-color: transparent;
@@ -166,25 +234,38 @@
 
     .btn:hover {
       color: var(--text);
-      border-color: var(--muted);
+      border-color: var(--text);
       transform: scale(1.03);
     }
 
     .btn:active { transform: scale(0.96); }
 
     .btn.doing {
-      color: var(--faint);
-      border-color: var(--faint);
+      color: var(--muted);
+      border-color: var(--muted);
       letter-spacing: 0.06em;
+    }
+
+    .made-by {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      user-select: none;
+      z-index: 10;
     }
 
     .pulse-bottom {
       position: absolute;
-      bottom: 2.5rem;
-      width: 5px;
-      height: 5px;
+      bottom: 4rem;
+      width: 5px; height: 5px;
       border-radius: 50%;
-      background: var(--faint);
+      background: var(--muted);
       animation: bottomdot 4s ease-in-out infinite;
     }
 
@@ -194,21 +275,38 @@
     }
 
     .ripple {
-      position: absolute;
+      position: fixed;
       border-radius: 50%;
-      border: 0.5px solid var(--faint);
+      border: 0.5px solid var(--muted);
       pointer-events: none;
       animation: rippleOut 1.2s ease-out forwards;
       transform: translate(-50%, -50%);
+      z-index: 0;
     }
 
     @keyframes rippleOut {
       from { width: 0; height: 0; opacity: 0.6; }
       to   { width: 300px; height: 300px; opacity: 0; }
     }
+
+    .confetti-piece {
+      position: fixed;
+      width: 6px; height: 6px;
+      border-radius: 1px;
+      pointer-events: none;
+      z-index: 9998;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0%   { transform: translateY(0) rotate(0deg);    opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
   </style>
 </head>
 <body>
+
+  <div id="cursor"></div>
   <div class="orb"></div>
 
   <div class="container">
@@ -227,10 +325,17 @@
       </div>
     </div>
 
-    <button class="btn" id="btn">Do Nothing</button>
+    <div id="quote-toast"></div>
+
+    <div class="bottom-group">
+      <div class="personal-counter" id="personal-counter">you: 0 times</div>
+      <div id="stop-msg">ok you can stop now</div>
+      <button class="btn" id="btn">Do Nothing</button>
+    </div>
   </div>
 
   <div class="pulse-bottom"></div>
+  <div class="made-by">made by ibrahim alsharif</div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
@@ -240,14 +345,128 @@
     const { createClient } = supabase;
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const counterEl = document.getElementById('counter');
-    const btnEl     = document.getElementById('btn');
-    let current     = null;
-    let btnTO       = null;
+    const counterEl    = document.getElementById('counter');
+    const btnEl        = document.getElementById('btn');
+    const personalEl   = document.getElementById('personal-counter');
+    const stopMsgEl    = document.getElementById('stop-msg');
+    const quoteEl      = document.getElementById('quote-toast');
+    const cursorEl     = document.getElementById('cursor');
 
-    function fmt(n) {
-      return Math.round(n).toLocaleString('en-US');
+    let current       = null;
+    let btnTO         = null;
+    let quoteTO       = null;
+    let personalCount = 0;
+
+    const quotes = [
+      "wow, very productive",
+      "you're amazing at this",
+      "peak performance",
+      "your best work yet",
+      "a true masterpiece",
+      "history will remember this",
+      "absolutely incredible",
+      "doing great, keep going",
+      "this is what talent looks like",
+      "you were born for this",
+      "your CV is looking great",
+      "your parents are so proud",
+      "scholars will study this moment",
+      "a true visionary",
+      "this is groundbreaking research",
+      "you just changed everything",
+      "nobel prize incoming",
+      "algorithms can't compete with you",
+      "this is art",
+      "a legend in the making",
+      "efficiency: maximized",
+      "the future is in good hands",
+      "you make it look so easy",
+      "nothing has never been done so well",
+      "the board of directors is impressed",
+      "your therapist will love this",
+      "certified nothing-doer",
+      "a gift to humanity, really",
+      "doing nothing better than anyone",
+      "i wish i could do nothing like you",
+      "are you even human",
+      "the algorithm chose you",
+      "ten out of ten, no notes",
+      "you've unlocked a new achievement: persistence",
+      "they said it couldn't be done",
+      "i'm not crying, you're crying",
+      "please never stop",
+      "what a time to be alive",
+      "you've peaked, and that's okay",
+      "this is what winning looks like",
+    ];
+
+    let quotePool = [];
+    function getQuote() {
+      if (quotePool.length === 0) {
+        quotePool = [...quotes].sort(() => Math.random() - 0.5);
+      }
+      return quotePool.pop();
     }
+
+    document.addEventListener('mousemove', (e) => {
+      cursorEl.style.left = e.clientX + 'px';
+      cursorEl.style.top  = e.clientY + 'px';
+    });
+
+    btnEl.addEventListener('mouseenter', () => cursorEl.classList.add('expand'));
+    btnEl.addEventListener('mouseleave', () => cursorEl.classList.remove('expand'));
+
+    function playClick() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.15);
+      } catch(e) {}
+    }
+
+    function spawnConfetti() {
+      const colors = ['#6bcb77','#ffd166','#ef476f','#118ab2','#aaaaaa'];
+      for (let i = 0; i < 40; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = (20 + Math.random() * 60) + 'vw';
+        el.style.top  = '-10px';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.animationDuration = (1.5 + Math.random() * 1.5) + 's';
+        el.style.animationDelay    = (Math.random() * 0.5) + 's';
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '1px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3500);
+      }
+    }
+
+    function showQuote() {
+      const q = getQuote();
+      quoteEl.textContent = q;
+      quoteEl.classList.add('show');
+      if (quoteTO) clearTimeout(quoteTO);
+      quoteTO = setTimeout(() => quoteEl.classList.remove('show'), 2200);
+    }
+
+    function spawnRipple(e) {
+      const r = document.createElement('div');
+      r.className = 'ripple';
+      r.style.left = e.clientX + 'px';
+      r.style.top  = e.clientY + 'px';
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 1300);
+    }
+
+    function fmt(n) { return Math.round(n).toLocaleString('en-US'); }
 
     function setCounter(n, animate = true) {
       if (animate) {
@@ -260,23 +479,11 @@
         counterEl.textContent = fmt(n);
       }
       current = n;
-    }
-
-    function spawnRipple(e) {
-      const r = document.createElement('div');
-      r.className = 'ripple';
-      r.style.left = (e.clientX) + 'px';
-      r.style.top  = (e.clientY) + 'px';
-      document.body.appendChild(r);
-      setTimeout(() => r.remove(), 1300);
+      if (n > 0 && n % 10 === 0) spawnConfetti();
     }
 
     async function fetchCount() {
-      const { data } = await db
-        .from('counter')
-        .select('value')
-        .eq('id', 1)
-        .single();
+      const { data } = await db.from('counter').select('value').eq('id', 1).single();
       return data ? data.value : null;
     }
 
@@ -291,10 +498,7 @@
 
       db.channel('counter-changes')
         .on('postgres_changes', {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'counter',
-          filter: 'id=eq.1'
+          event: 'UPDATE', schema: 'public', table: 'counter', filter: 'id=eq.1'
         }, (payload) => {
           const newVal = payload.new.value;
           if (newVal !== current) setCounter(newVal, true);
@@ -304,11 +508,21 @@
 
     btnEl.addEventListener('click', async (e) => {
       spawnRipple(e);
-      const bump = 1;
-      const newVal = await increment(bump);
+      playClick();
+      showQuote();
+
+      personalCount++;
+      personalEl.textContent = `you: ${personalCount} time${personalCount !== 1 ? 's' : ''}`;
+
+      if (personalCount === 5) {
+        stopMsgEl.classList.add('show');
+        setTimeout(() => stopMsgEl.classList.remove('show'), 3000);
+      }
+
+      const newVal = await increment(1);
       if (newVal !== null) setCounter(newVal, true);
 
-      btnEl.textContent = 'You are doing nothing';
+      btnEl.textContent = 'doing nothing...';
       btnEl.classList.add('doing');
       if (btnTO) clearTimeout(btnTO);
       btnTO = setTimeout(() => {
